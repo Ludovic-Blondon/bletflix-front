@@ -160,7 +160,48 @@ function useDispatchContext() {
     }
   }
 
-  return { apiFetchEntity, apiUpdateEntity, apiFetchCollection, apiFetchSubResource, apiDeleteEntity };
+  async function apiPostEntity(endpoint, data, external_dispatcher) {
+    try {
+      let response = await axios({
+        method: 'post',
+        data: data,
+        url: process.env.API_ENTRYPOINT + '/api/' + endpoint,
+        headers: {
+          'Accept': 'application/ld+json',
+          'Content-Type': 'application/ld+json',
+          'Authorization': 'Bearer ' + authToken
+        },
+      });
+      external_dispatcher(response.data)
+    } catch (e) {
+      responseAuthControl(e.response.data);
+      external_dispatcher(e.response.data);
+    }
+  }
+
+  async function apiPostEntityWithProgress(endpoint, data, setter, external_dispatcher) {
+    try {
+      let response = await axios({
+        method: 'post',
+        data: data,
+        url: process.env.API_ENTRYPOINT + '/api/' + endpoint,
+        onUploadProgress: (p) => {
+            setter(p)
+        },
+        headers: {
+          'Accept': 'application/ld+json',
+          'Content-Type': 'application/ld+json',
+          'Authorization': 'Bearer ' + authToken
+        },
+      });
+      external_dispatcher(response.data)
+    } catch (e) {
+      responseAuthControl(e.response.data);
+      external_dispatcher(e.response.data);
+    }
+  }
+
+  return { apiFetchEntity, apiUpdateEntity, apiFetchCollection, apiFetchSubResource, apiDeleteEntity, apiPostEntity, apiPostEntityWithProgress };
 };
 
 const useApiContext = () => {

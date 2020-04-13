@@ -22,8 +22,6 @@ const MyHeader = () => {
 		</Menu>
 	);
 
-	 console.log(auth)
-
 	return (
 	    <Header className="header">
 	    	{
