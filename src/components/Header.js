@@ -1,6 +1,5 @@
 import React from 'react';
 import { Layout, Avatar } from 'antd';
-
 import { useAuthContext } from '../providers/AuthProvider.js';
 
 const Header = () => {

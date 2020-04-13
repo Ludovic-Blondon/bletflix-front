@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Redirect } from 'react-router-dom'
 import { Icon } from 'antd'
-
 import { useAuthContext } from '../providers/AuthProvider.js';
 
 const Login = () => {
@@ -9,9 +8,7 @@ const Login = () => {
   const [authState, authDispatch] = useAuthContext();
   const { auth } = authState;
   const { authLogin, authLogout, authIsLogged } = authDispatch;
-
   const [loading, setLoading] = useState(false);
-
 
   return (
     <div>

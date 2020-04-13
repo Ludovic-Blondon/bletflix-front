@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom'
 import { Menu, Icon } from 'antd';
-
 import { useAuthContext } from '../providers/AuthProvider.js';
 
 const NavPrivate = () => {

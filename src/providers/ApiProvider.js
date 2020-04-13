@@ -90,18 +90,77 @@ function useDispatchContext() {
   async function apiFetchCollection(endpoint,params,external_dispatcher) {
     let itemsPerPage = params.itemsPerPage || 10;
     let page = params.page || 1;
-    let response = await axios({
-      method: 'get',
-      url: process.env.API_ENTRYPOINT + '/api/'+endpoint+'.jsonld?itemsPerPage=' + itemsPerPage + '&page=' + page,
-      headers: {
-        'Accept': 'application/ld+json',
-        'Authorization': 'Bearer ' + authToken
-      },
-    });
-    external_dispatcher(response.data)
+    let filters = params.filters;
+    let filtres = '';
+    if (params.filters && params.filters.length > 0) {
+      params.filters.map(filter => {
+        filtres += '&' + filter['name'] + '=' + filter['value']
+      })
+    }
+    try {
+      let response = await axios({
+        method: 'get',
+        url: process.env.API_ENTRYPOINT + '/api/' + endpoint + '.jsonld?itemsPerPage=' + itemsPerPage + '&page=' + page + filtres,
+        headers: {
+          'Accept': 'application/ld+json',
+          'Authorization': 'Bearer ' + authToken
+        },
+      });
+      external_dispatcher(response.data)
+    } catch (e) {
+      // console.log(e.response);
+      responseAuthControl(e.response.data);
+      external_dispatcher(e.response.data);
+    }
   }
 
-  return { apiFetchEntity, apiUpdateEntity, apiFetchCollection };
+  async function apiFetchSubResource(endpoint, params, resource, external_dispatcher) {
+    let id = params.id;
+    let itemsPerPage = params.itemsPerPage || 30;
+    let page = params.page || 1;
+    let filtres = '';
+    if (params.filters && params.filters.length > 0) {
+      params.filters.map(filter => {
+        filtres += '&' + filter['name'] + '=' + filter['value']
+      })
+    }
+    try {
+      let response = await axios({
+        method: 'get',
+        url: process.env.API_ENTRYPOINT + '/api/' + endpoint + '/' + id + '/' + resource + '?itemsPerPage=' + itemsPerPage + '&page=' + page + filtres,
+        headers: {
+          'Accept': 'application/ld+json',
+          'Authorization': 'Bearer ' + authToken
+        },
+
+      });
+      external_dispatcher(response.data)
+    } catch (e) {
+      console.log(e.response)
+      responseAuthControl(e.response.data);
+      external_dispatcher(e.response.data);
+    }
+  }
+
+  async function apiDeleteEntity(endpoint, id, external_dispatcher) {
+    try {
+      let response = await axios({
+        method: 'delete',
+        url: process.env.API_ENTRYPOINT + '/api/' + endpoint + '/' + id,
+        headers: {
+          'Accept': 'application/ld+json',
+          'Content-Type': 'multipart/form-data',
+          'Authorization': 'Bearer ' + authToken
+        },
+      });
+      external_dispatcher(response.data)
+    } catch (e) {
+      responseAuthControl(e.response.data);
+      external_dispatcher(e.response.data);
+    }
+  }
+
+  return { apiFetchEntity, apiUpdateEntity, apiFetchCollection, apiFetchSubResource, apiDeleteEntity };
 };
 
 const useApiContext = () => {
