@@ -1,0 +1,149 @@
+import React, { useContext } from 'react';
+import { useImmer } from 'use-immer';
+
+import axios from "axios";
+
+const login_endpoint = process.env.API_ENTRYPOINT + '/login';
+
+let _auth = null
+try {
+  _auth = window.localStorage.getItem('auth') || null
+  _auth = _auth ? JSON.parse(_auth) : null;
+} catch(e) {
+  // nothing to do ^^
+}
+
+// ---------------------------------------------------
+// Default contextual state values
+// ---------------------------------------------------
+const defaultState = {
+  auth: _auth,
+};
+
+// ---------------------------------------------------
+// Context provider declaration
+// ---------------------------------------------------
+const StateContext = React.createContext();
+const DispatchContext = React.createContext();
+
+const AuthProvider = ({ children }) => {
+  const [state, dispatch] = useImmer({ ...defaultState });
+  // alternatively without Immer:  const [state, dispatch] = useState({});
+
+  return (
+    <StateContext.Provider value={state}>
+      <DispatchContext.Provider value={dispatch}>
+        {children}
+      </DispatchContext.Provider>
+    </StateContext.Provider>
+  );
+};
+
+// ---------------------------------------------------
+// Context usage function declaration
+// ---------------------------------------------------
+function useStateContext() {
+  const state = useContext(StateContext);
+
+  if (state === undefined) {
+    throw new Error("Ut oh, where is my state?");
+  }
+
+  return state;
+};
+
+function useDispatchContext() {
+  const state = useContext(StateContext);
+  const dispatch = useContext(DispatchContext);
+
+  if (state === undefined) {
+    throw new Error("Ut oh, where is my state?");
+  }
+
+  if (dispatch === undefined) {
+    throw new Error("Ut oh, where is my dispatch?");
+  }
+
+  async function authLogin(email,password) {
+    try {
+      var response = await axios.post(login_endpoint,{
+        email:email,
+        password:password,
+      })
+      if(response.data.token)
+      {
+        localStorage.setItem('auth',JSON.stringify(response.data));
+        dispatch(draft => { draft.auth = response.data; });
+      }
+      else
+      {
+        localStorage.removeItem('auth');
+        dispatch(draft => { draft.auth = false; });
+      }
+    } catch(e) {
+      localStorage.removeItem('auth');
+      dispatch(draft => { draft.auth = false; });
+    }
+  }
+
+  function authLogout() {
+    localStorage.removeItem('auth');
+    dispatch(draft => { draft.auth = null; });
+  }
+
+  function authIsLogged() {
+    return state.auth ? true:false;
+  }
+
+  return { authLogin, authLogout, authIsLogged };
+};
+
+const useAuthContext = () => {
+  return [useStateContext(), useDispatchContext()]
+}
+
+// ---------------------------------------------------
+// final export (addapt useContext and Provider name)
+// ---------------------------------------------------
+export { useAuthContext, AuthProvider, StateContext, DispatchContext };
+
+
+// ---------------------------------------------------
+// Context initialisation in APP
+// ---------------------------------------------------
+/*
+import React from 'react';
+import { AuthProvider } from './providers/AuthProvider.js';
+import { AuthProvider2 } from './providers/AuthProvider2.js';
+
+function App() {
+  return (
+    <AuthProvider>
+      <AuthProvider2>
+        <div>Sample App content</div>
+      </AuthProvider2>
+    </AuthProvider>
+  );
+}
+export default App
+*/
+
+// ---------------------------------------------------
+// usage in a react component :
+// ---------------------------------------------------
+/*
+import React, { useEffect } from 'react';
+import { useAuthContext } from './AuthProvider.js';
+
+const MyComponent = () => {
+  const [authState, authDispatch] = useAuthContext();
+  const { auth } = authState;
+  const { authLogout } = authDispatch;
+
+  return (
+    <button onClick={() => authLogout()}>{auth ? auth.username : 'not logged'}</button>
+  );
+};
+
+export default MyComponent;
+*/
