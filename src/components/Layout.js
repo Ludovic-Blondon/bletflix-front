@@ -1,15 +1,19 @@
 import React from 'react';
+import MyHeader from './Header.js';
+
 import { Layout } from 'antd';
-import Header from './Header.js';
+
+const { Content, Footer } = Layout;
 
 const AppLayout = ({ children }) => {
   return (
-    <Layout className="root-layout" style={{ minHeight: '100vh' }}>
-      <Header />
-      <Layout style={{padding:'1em'}}>
-        {children}
-      </Layout>
-    </Layout>
+      <Layout className="layout">
+	    <MyHeader />
+	    <Content>
+			{children}
+	    </Content>
+	    <Footer style={{ textAlign: 'center' }}>bletflix ©2020 Created by lb-developpeur</Footer>
+	  </Layout>
   );
 };
 

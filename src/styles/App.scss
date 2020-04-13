@@ -1,8 +1,51 @@
-.sidebar-layout .ant-card {
-  margin-top: 1em;
-  .username {
-    margin-left: 0.5em;
-    text-transform: capitalize;
-    display: inline-block;
+.site-layout-content {
+  background: #fff;
+  padding: 24px;
+  min-height: 280px;
+}
+#components-layout-demo-top .logo {
+  width: 120px;
+  height: 31px;
+  background: rgba(255, 255, 255, 0.2);
+  margin: 16px 24px 16px 0;
+  float: left;
+}
+
+.ant-layout.layout {
+	min-height: 100vh;
+	.ant-layout-content {
+		padding: 50px;
+    height: 100%;
+    width: 100%;
+	}
+}
+
+//Header NavBar
+.header {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  .header_action {
+    display: flex;
+    align-items: center;
+    .dropdown_avatar:hover {
+      cursor: pointer
+    }    
   }
+}
+
+
+//page login
+.login-form {
+  max-width: 300px;
+  margin: 50px auto;
+}
+.login-form-forgot {
+  float: right;
+}
+.ant-col-rtl .login-form-forgot {
+  float: left;
+}
+.login-form-button {
+  width: 100%;
 }

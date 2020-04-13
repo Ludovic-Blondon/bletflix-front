@@ -64,7 +64,7 @@ function useDispatchContext() {
     throw new Error("Ut oh, where is my dispatch?");
   }
 
-  async function authLogin(email,password) {
+  async function authLogin(email,password, external_dispatcher) {
     try {
       var response = await axios.post(login_endpoint,{
         email:email,
@@ -74,15 +74,18 @@ function useDispatchContext() {
       {
         localStorage.setItem('auth',JSON.stringify(response.data));
         dispatch(draft => { draft.auth = response.data; });
+        external_dispatcher(response.data)
       }
       else
       {
         localStorage.removeItem('auth');
         dispatch(draft => { draft.auth = false; });
+        external_dispatcher(response.data)
       }
     } catch(e) {
       localStorage.removeItem('auth');
       dispatch(draft => { draft.auth = false; });
+      external_dispatcher(e.response.data)
     }
   }
 
@@ -92,10 +95,14 @@ function useDispatchContext() {
   }
 
   function authIsLogged() {
-    return state.auth ? true:false;
+    return state.auth ? true : false;
   }
 
-  return { authLogin, authLogout, authIsLogged };
+  function authIsAdmin() {
+    return state.auth && state.auth.roles.includes('ROLE_ADMIN') ? true : false;
+  }
+
+  return { authLogin, authLogout, authIsLogged, authIsAdmin };
 };
 
 const useAuthContext = () => {
