@@ -8,12 +8,12 @@ const MyHeader = () => {
 
     const [authState, authDispatch] = useAuthContext();
     const { auth } = authState;
-    const { authLogin, authIsLogged, authLogout } = authDispatch;
+    const { authLogin, authIsLogged } = authDispatch;
 
 	 const menu = (
 		<Menu>
 			<Menu.Item key="0">
-			    <a href="">{auth.username}</a>
+			    <a href="">Votre profil</a>
 			</Menu.Item>
 			<Menu.Divider />
 		    <Menu.Item key="1">
