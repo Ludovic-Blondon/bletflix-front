@@ -109,7 +109,7 @@ function useDispatchContext() {
       external_dispatcher(response.data)
     } catch (e) {
       // console.log(e.response);
-      responseAuthControl(e.response.data);
+      //responseAuthControl(e.response.data);
       external_dispatcher(e.response.data);
     }
   }
@@ -137,7 +137,7 @@ function useDispatchContext() {
       external_dispatcher(response.data)
     } catch (e) {
       console.log(e.response)
-      responseAuthControl(e.response.data);
+      //responseAuthControl(e.response.data);
       external_dispatcher(e.response.data);
     }
   }
@@ -155,7 +155,7 @@ function useDispatchContext() {
       });
       external_dispatcher(response.data)
     } catch (e) {
-      responseAuthControl(e.response.data);
+      //responseAuthControl(e.response.data);
       external_dispatcher(e.response.data);
     }
   }
@@ -174,7 +174,7 @@ function useDispatchContext() {
       });
       external_dispatcher(response.data)
     } catch (e) {
-      responseAuthControl(e.response.data);
+      //responseAuthControl(e.response.data);
       external_dispatcher(e.response.data);
     }
   }
@@ -196,7 +196,7 @@ function useDispatchContext() {
       });
       external_dispatcher(response.data)
     } catch (e) {
-      responseAuthControl(e.response.data);
+      //responseAuthControl(e.response.data);
       external_dispatcher(e.response.data);
     }
   }

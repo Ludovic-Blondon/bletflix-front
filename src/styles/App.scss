@@ -30,9 +30,13 @@
 .container_page {
   padding: 24px;
   min-height: 280px;
+}
+
+.flex-center {
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-bottom: 30px;
 }
 
 
