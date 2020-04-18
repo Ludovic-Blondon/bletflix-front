@@ -4,20 +4,32 @@ import { Upload, message, Progress } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
 const { Dragger } = Upload;
 
-export default function New() {
+export default function New({multiple}) {
 
     const [apiState, apiDispatch] = useApiContext();
     const {apiPostEntityWithProgress} = apiDispatch;
-    const [progress, setProgress] = useState(null)
+    const [progress, setProgress] = useState([])
+    const [names, setNames] = useState([])
+    const [index, setIndex] = useState(0)
 
-	console.log(progress)
+	function implementsProgress(pro) {
+			let newArr = progress
+			const pos = newArr.map(function(e) { return e.total; }).indexOf(pro.total);
+
+			if (pos >= 0) {
+				newArr[pos] = pro
+			} else {
+				newArr.push(pro)
+			}
+			
+			setProgress([...newArr])
+	}
 
 	function upload(info) {
-		//console.log('upload')
 		let formData = new FormData();
         formData.append('file', info.file);
 
-        apiPostEntityWithProgress("media_objects", formData, setProgress, (response) => {
+        apiPostEntityWithProgress("media_objects", formData, implementsProgress, (response) => {
         	console.log(response)
 	        if (response['@type'] === "hydra:Error") {
 
@@ -32,7 +44,7 @@ export default function New() {
 	}
 
 	function beforeUpload(info) {
-		//console.log(info)
+		//console.log('before')
 		if (!(/video/).test(info.type)) {
 			message.error('format non valide')
 			return false;
@@ -42,7 +54,7 @@ export default function New() {
 			return false;
 		}
 
-		message.success("c'est partie mon kiki")
+		setNames(names => [...names, info.name])
 	}
 
 	return (
@@ -50,7 +62,7 @@ export default function New() {
 			<div className="flex-center">
 				<Dragger
 					name='file'
-					multiple={false}
+					multiple={true}
 					customRequest={upload}
 					onChange={onChange}
 					style={{padding: 20}}
@@ -66,23 +78,31 @@ export default function New() {
 				    </p>
 				</Dragger>
 			</div>
+			<div className="flex-center">
 			{
 				progress
 				?
-					<div className="flex-center">
-					    <Progress
-					        type="circle"
-					        strokeColor={{
-					        	'0%': '#108ee9',
-					        	'100%': '#87d068',
-					      	}}
-					      percent={Math.round(progress.loaded * 100 / progress.total)}
-					    />
-					</div>				
+					<div>
+					{
+						progress.map((elem, id) => (
+							<div key={id}>
+								<span>{names[id]}</span>
+							    <Progress
+							    	style={{minWidth: 300}}
+							        strokeColor={{
+							        	'0%': '#108ee9',
+							        	'100%': '#87d068',
+							      	}}
+							        percent={Math.round(progress[id].loaded * 100 / progress[id].total)}
+							    />
+							</div>
+						))
+					}
+					</div>		
 				:
 					null
 			}
-
+			</div>		
 		</div>
 	)
 }
