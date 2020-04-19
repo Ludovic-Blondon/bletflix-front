@@ -1,11 +1,15 @@
-import React from 'react'
+import React, {useState} from 'react'
 import {Form, Input, Button, Radio, DatePicker} from 'antd'
+import UploadAvatar from './UploadAvatar.js'
 const { TextArea } = Input;
 
 export default function NewProd({apiPostEntity, setFirstStep, setIriForNextStep, setType}) {
 
+	const [iri, setIri] = useState(null)
+
 	function onFinish(value) {
 		console.log(value)
+		if(iri) { value.mediaObject = iri }
 		apiPostEntity('productions', value, response => {
 			console.log(response)
 			if (response['@type'] === "hydra:Error") {
@@ -15,7 +19,6 @@ export default function NewProd({apiPostEntity, setFirstStep, setIriForNextStep,
 			setIriForNextStep(response['@id'])
 			setFirstStep(false)
 		})
-
 	}
 
 	function onFinishFailed(errorInfos) {
@@ -54,6 +57,9 @@ export default function NewProd({apiPostEntity, setFirstStep, setIriForNextStep,
 				name="description"
 			>
 				<TextArea placeholder="Déscription" allowClear />
+		    </Form.Item>
+		    <Form.Item>
+				<UploadAvatar apiPostEntity={apiPostEntity} setIri={setIri} />
 		    </Form.Item>
 		    <Form.Item>
 		        <Button type="primary" htmlType="submit">

@@ -24,7 +24,7 @@ export default function UploadVideo({apiPostEntityWithProgress, apiPostEntity, a
 	function upload(info) {
 		let formData = new FormData();
         formData.append('file', info.file);
-        formData.append('production', iri)
+        formData.append('production', iri);
 
         apiPostEntityWithProgress("media_objects", formData, implementsProgress, (response1) => {
         	console.log(response1)
