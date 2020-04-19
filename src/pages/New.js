@@ -36,7 +36,12 @@ export default function New() {
 									multiple={false}
 								/>
 							:
-								<NewSeason />
+								<NewSeason 
+									apiPostEntityWithProgress={apiPostEntityWithProgress}
+									apiPostEntity={apiPostEntity}
+									apiDeleteEntity={apiDeleteEntity}
+									iriProd={iriForNextStep}
+								/>
 					}
 				</div>
 			</div>

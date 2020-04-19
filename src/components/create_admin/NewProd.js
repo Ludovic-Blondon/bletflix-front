@@ -9,7 +9,7 @@ export default function NewProd({apiPostEntity, setFirstStep, setIriForNextStep,
 
 	function onFinish(value) {
 		console.log(value)
-		if(iri) { value.mediaObject = iri }
+		if(iri) { value.mediaObject = iri; }
 		apiPostEntity('productions', value, response => {
 			console.log(response)
 			if (response['@type'] === "hydra:Error") {
