@@ -35,7 +35,7 @@ export default function UploadAvatar({apiPostEntity, setIri}) {
 
 	        } else {
 				setIri(response['@id'])
-				setImageUrl('http://localhost:8000' + response.contentUrl)
+				setImageUrl(response.contentUrl)
 				setLoading(false)
 	        }
 	    });
