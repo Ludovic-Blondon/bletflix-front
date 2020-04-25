@@ -7,7 +7,6 @@ export default function UploadVideo({apiPostEntityWithProgress, apiPostEntity, a
 
     const [progress, setProgress] = useState([])
     const [names, setNames] = useState([])
-
     const [firstStep, setFirstStep] = useState(true)
 
 	function implementsProgress(pro) {
@@ -27,6 +26,9 @@ export default function UploadVideo({apiPostEntityWithProgress, apiPostEntity, a
 		let formData = new FormData();
         formData.append('file', info.file);
         formData.append('production', iri);
+
+     	// if (multiple) { formData.append('type', 'serie'); }
+    	// else { formData.append('type', 'movie'); }
 
         apiPostEntityWithProgress("media_objects", formData, implementsProgress, (response1) => {
         	console.log(response1)
@@ -53,6 +55,9 @@ export default function UploadVideo({apiPostEntityWithProgress, apiPostEntity, a
 					if (multiple) { setFirstStep(false); return; }
 					window.location.href = '/';
 				})
+
+				// if (multiple) { setFirstStep(false); return; }
+				// window.location.href = '/';
 	        }
 	    });
 	}
@@ -62,7 +67,7 @@ export default function UploadVideo({apiPostEntityWithProgress, apiPostEntity, a
 			message.error('format non valide')
 			return false;
 		}
-		if (info.size > 2000000000) {
+		if (info.size > 5000000000) {
 			message.error('Video trop lourde')
 			return false;
 		}

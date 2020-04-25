@@ -62,22 +62,26 @@ function useDispatchContext() {
   }
 
   async function apiFetchEntity(endpoint,id,external_dispatcher) {
-    let response = await axios({
-      method: 'get',
-      url: process.env.API_ENTRYPOINT + '/api/'+endpoint+'/'+id+'.jsonld',
-      headers: {
-        'Accept': 'application/ld+json',
-        'Authorization': 'Bearer ' + authToken
-      },
-    });
-    external_dispatcher(response.data)
+    try {
+      let response = await axios({
+        method: 'get',
+        url: process.env.API_ENTRYPOINT + '/api/'+endpoint+'/'+id,
+        headers: {
+          'Accept': 'application/ld+json',
+          'Authorization': 'Bearer ' + authToken
+        },
+      });
+      external_dispatcher(response.data)
+    } catch (e) {
+      external_dispatcher(e.response.data);
+    }
   }
 
   async function apiUpdateEntity(endpoint,id,data,external_dispatcher) {
     let response = await axios({
       method: 'patch',
       data: data,
-      url: process.env.API_ENTRYPOINT + '/api/'+endpoint+'/'+id+'.jsonld',
+      url: process.env.API_ENTRYPOINT + '/api/'+endpoint+'/'+id,
       headers: {
         'Accept': 'application/ld+json',
         'Content-Type' : 'application/merge-patch+json',
@@ -100,7 +104,7 @@ function useDispatchContext() {
     try {
       let response = await axios({
         method: 'get',
-        url: process.env.API_ENTRYPOINT + '/api/' + endpoint + '.jsonld?itemsPerPage=' + itemsPerPage + '&page=' + page + filtres,
+        url: process.env.API_ENTRYPOINT + '/api/' + endpoint + '?itemsPerPage=' + itemsPerPage + '&page=' + page + filtres,
         headers: {
           'Accept': 'application/ld+json',
           'Authorization': 'Bearer ' + authToken

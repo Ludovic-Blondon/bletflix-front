@@ -39,7 +39,6 @@
   margin-bottom: 30px;
 }
 
-
 //page login
 .login-form {
   max-width: 300px;
@@ -55,8 +54,27 @@
   width: 100%;
 }
 
-
+// avatar upload
 .avatar-uploader > .ant-upload {
   width: 128px;
   height: 128px;
+}
+
+// home
+.jacket_thumb_home {
+  width: 150px;
+}
+.legend_prod_home {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.85);
+  .legend_title {
+    font-size: 1.3em;
+    font-weight: bold;
+  }
+}
+
+// play
+
+.jacket_play {
+  width: 300px;
 }
